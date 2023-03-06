@@ -4,7 +4,11 @@ import config from "../conf/index.js";
 function getAdventureIdFromURL(search) {
   // TODO: MODULE_ADVENTURE_DETAILS
   // 1. Get the Adventure Id from the URL
-
+  console.log(search);
+  const params = new URLSearchParams(search);
+  const cityid =params.get('adventure');
+ // console.log(cityid);
+  return(cityid);
 
   // Place holder for functionality to work in the Stubs
   return null;
@@ -13,16 +17,54 @@ function getAdventureIdFromURL(search) {
 async function fetchAdventureDetails(adventureId) {
   // TODO: MODULE_ADVENTURE_DETAILS
   // 1. Fetch the details of the adventure by making an API call
-
-
   // Place holder for functionality to work in the Stubs
-  return null;
+  console.log(config.backendEndpoint+"/adventures/detail?adventure="+adventureId);
+  try{
+    const  result = await fetch(`${config.backendEndpoint}/adventures/detail?adventure=`+adventureId);
+    const data = await result.json();
+    //console.log(data);
+   return data;
+     }
+     catch(err){
+       return null;
+     }
+   
+  
 }
 
 //Implementation of DOM manipulation to add adventure details to DOM
 function addAdventureDetailsToDOM(adventure) {
   // TODO: MODULE_ADVENTURE_DETAILS
   // 1. Add the details of the adventure to the HTML DOM
+  console.log(adventure);
+const h1tag = document.getElementById("adventure-name");
+h1tag.textContent=adventure.name;
+const ptag = document.getElementById("adventure-subtitle");
+ptag.textContent=adventure.subtitle;
+
+
+//console.log(adventure.images.length);
+const content = document.getElementById("photo-gallery");
+
+for (let i=0;i< adventure.images.length ; i++){
+
+const divele = document.createElement("div");
+divele.id=[i];
+// divele.className="activity-card-image";
+const imgele = document.createElement("img");
+imgele.src=adventure.images[i];
+imgele.alt=adventure.name+"picture";
+imgele.className="activity-card-image";
+divele.append(imgele);
+content.append(divele);
+
+// const content = document.getElementById("adventure-content");
+// content.textContent= adventure.content;
+
+}
+const det = document.getElementById("adventure-content");
+det.textContent= adventure.content;
+
 
 }
 
@@ -30,6 +72,86 @@ function addAdventureDetailsToDOM(adventure) {
 function addBootstrapPhotoGallery(images) {
   // TODO: MODULE_ADVENTURE_DETAILS
   // 1. Add the bootstrap carousel to show the Adventure images
+//console.log(images);
+const a = document.getElementById("photo-gallery");
+a.innerHTML=``;
+const b = document.createElement("div");
+a.append(b);
+b.className="carousel slide";
+b.id="carouselExampleIndicators";
+b.setAttribute("data-bs-ride","carousel");
+
+
+const c = document.createElement("div");
+c.className="carousel-indicators";
+b.appendChild(c);
+
+
+for(let i=0;i< images.length ;i++){
+  const b1= document.createElement("button");
+  b1.setAttribute("type","button");
+
+
+  if(i === 0)
+  {
+    b1.setAttribute("data-bs-target","#carouselExampleIndicators");
+    b1.setAttribute("data-bs-slide-to",`${i}`);
+    b1.className="active";
+    b1.setAttribute("aria-current","true");
+    b1.setAttribute("aria-label","Slide "+`${i+1}`);
+    c.appendChild(b1);
+  }
+  else{
+    b1.setAttribute("data-bs-target","#carouselExampleIndicators");
+    b1.setAttribute("data-bs-slide-to",`${i}`);
+    b1.setAttribute("aria-label","Slide "+`${i+1}`);
+    c.appendChild(b1);
+  }
+//c.appendChild(b1);
+
+}
+
+const d= document.createElement("div");
+d.className="carousel-inner";
+b.append(d);
+
+for(let i=0;i< images.length ;i++){
+
+  if(i === 0)
+  {
+   const d1= document.createElement("div");
+   d1.className="carousel-item active";
+   const pic = document.createElement("img");
+   pic.src=images[i];
+   pic.alt=i;
+   pic.className="activity-card-image";
+   d1.appendChild(pic);
+   d.append(d1);
+  
+  }
+  else{
+    const d1= document.createElement("div");
+    d1.className="carousel-item";
+    const pic = document.createElement("img");
+    pic.alt=i;
+    pic.className="activity-card-image";
+    pic.src=images[i];
+    d1.appendChild(pic);
+    d.append(d1);
+  }
+//c.appendChild(b1);
+}
+const e= document.createElement("div");
+b.append(e);
+e.innerHTML=`<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+<span class="visually-hidden">Previous</span>
+</button>
+<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+<span class="carousel-control-next-icon" aria-hidden="true"></span>
+<span class="visually-hidden">Next</span>
+</button>`;
+
 
 }
 
