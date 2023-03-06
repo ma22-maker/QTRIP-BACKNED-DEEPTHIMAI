@@ -38,7 +38,7 @@ function addAdventureToDOM(adventures) {
 //console.log(adventures);
   const content =document.getElementById("data");
   adventures.forEach(element => {
-  console.log(element);
+  //console.log(element);
 
    const divcol =document.createElement("div");
    divcol.className="col col-lg-3 col-md-6 col-xs-12";
@@ -106,14 +106,26 @@ function addAdventureToDOM(adventures) {
 function filterByDuration(list, low, high) {
   // TODO: MODULE_FILTERS
   // 1. Filter adventures based on Duration and return filtered list
+  console.log(list);
+  const filteredList = list.filter(adventure => {
+    const duration = parseInt(adventure.duration); // Convert duration to integer
+    return ((duration >= low) && (duration <= high)); // Check if duration falls within range
+  });
 
+  return (filteredList);
 }
 
 //Implementation of filtering by category which takes in a list of adventures, list of categories to be filtered upon and returns a filtered list of adventures.
 function filterByCategory(list, categoryList) {
   // TODO: MODULE_FILTERS
   // 1. Filter adventures based on their Category and return filtered list
+ console.log(categoryList);
+ console.log(list[0].category);
 
+ if (categoryList.length === 0) {
+  return list;
+  }
+  return list.filter(adventure => categoryList.includes(adventure.category));
 }
 
 // filters object looks like this filters = { duration: "", category: [] };
@@ -127,28 +139,53 @@ function filterFunction(list, filters) {
   // TODO: MODULE_FILTERS
   // 1. Handle the 3 cases detailed in the comments above and return the filtered list of adventures
   // 2. Depending on which filters are needed, invoke the filterByDuration() and/or filterByCategory() methods
+  // filterByDuration(list,)
+  //console.log(filters);
+  //console.log(filters["category"]);
+//list = filterByCategory(list,filters["category"]);
+// console.log(list);
+let filteredList = list;
 
+  // 2. Depending on which filters are needed, invoke the filterByDuration() and/or filterByCategory() methods
+  if (filters.duration) {
+    const durationArray = filters.duration.split('-'); 
+    const low = parseInt(durationArray[0]); 
+    const high = parseInt(durationArray[1]); 
+    //console.log (low +""+high);
+    filteredList = filterByDuration(filteredList, low, high);
+  }
+  
+  if (filters.category && filters.category.length > 0) {
+    filteredList = filterByCategory(filteredList, filters.category);
+  }
+
+  return filteredList;
 
   // Place holder for functionality to work in the Stubs
-  return list;
+ // return list;
 }
 
 //Implementation of localStorage API to save filters to local storage. This should get called everytime an onChange() happens in either of filter dropdowns
 function saveFiltersToLocalStorage(filters) {
   // TODO: MODULE_FILTERS
   // 1. Store the filters as a String to localStorage
-
+  window.localStorage.setItem('filters', JSON.stringify(filters));
   return true;
+
 }
 
 //Implementation of localStorage API to get filters from local storage. This should get called whenever the DOM is loaded.
 function getFiltersFromLocalStorage() {
   // TODO: MODULE_FILTERS
   // 1. Get the filters from localStorage and return String read as an object
-
+  const storedValue = window.localStorage.getItem('filters');
+  //console.log(storedValue);
+  const parsedValue = JSON.parse(storedValue);
+  //console.log(parsedValue);
+  return(parsedValue); 
 
   // Place holder for functionality to work in the Stubs
-  return null;
+  
 }
 
 //Implementation of DOM manipulation to add the following filters to DOM :
@@ -158,6 +195,24 @@ function getFiltersFromLocalStorage() {
 function generateFilterPillsAndUpdateDOM(filters) {
   // TODO: MODULE_FILTERS
   // 1. Use the filters given as input, update the Duration Filter value and Generate Category Pills
+  
+  if(filters.duration){
+    const rename = document.getElementById("duration-select");
+    rename.value = filters.duration;
+      }
+  
+  if(filters.category && filters.category.length > 0){
+  const listappend =document.getElementById("category-list");
+  // listappend.className="category-filter";
+  for(let i=0; i<filters["category"].length;i++)
+  {
+  const ptag = document.createElement("p");
+  ptag.className="category-filter";
+  ptag.textContent=(filters["category"][i]);
+  listappend.append(ptag);
+
+  }
+}
 
 }
 export {
