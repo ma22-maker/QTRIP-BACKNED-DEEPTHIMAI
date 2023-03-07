@@ -53,33 +53,33 @@ function addReservationToTable(reservations) {
           // row.id=reservations[i].id;
           // Add columns for reservation ID, adventure name, date of booking, booking time, etc.
           const idCol = document.createElement("td");
-          idCol.innerText = reservations[i].id;
+          idCol.textContent = reservations[i].id;
           row.append(idCol);
           
           const advCol = document.createElement("td");
-          advCol.innerText = reservations[i].name ;
+          advCol.textContent = reservations[i].name;
           row.append(advCol);
          
           const Col2 = document.createElement("td");
-          Col2.innerText = reservations[i].adventureName;
+          Col2.textContent = reservations[i].adventureName;
           row.append(Col2);
 
           const Col3 = document.createElement("td");
-          Col3.innerText = reservations[i].person;
+          Col3.textContent = reservations[i].person;
           row.append(Col3);
 
           const Col4 = document.createElement("td");
           const inputDateStr = reservations[i].date;
           const inputDate = new Date(inputDateStr);
-          const day = inputDate.getDate().toString().padStart(2, '0');
-          const month = (inputDate.getMonth() + 1).toString().padStart(2, '0');
+          const day = inputDate.getDate().toString();
+          const month = (inputDate.getMonth() + 1).toString();
           const year = inputDate.getFullYear().toString();
           const outputDateStr = `${day}/${month}/${year}`;
-          Col4.innerText =outputDateStr;
+          Col4.textContent =outputDateStr;
           row.append(Col4);
 
           const Col5 = document.createElement("td");
-          Col5.innerText = reservations[i].price;
+          Col5.textContent = reservations[i].price;
           row.append(Col5);
 
           const Col6 = document.createElement("td");
@@ -96,20 +96,26 @@ function addReservationToTable(reservations) {
             //timeZoneName: "short",
             //hourCycle: 'h12' // To use 12-hour format
           };
-          const out = input.toLocaleDateString("en-IN", options).replace("at", ",");
-          console.log(out);
-          Col6.innerText = out;
+          const out = input.toLocaleDateString("en-IN", options).replace(" at",",");
+          //console.log(out);
+          Col6.textContent = out;
           row.append(Col6);
 
           
           const Col7 = document.createElement("td");
-          // Col7.innerText = reservations[i].person;
+          Col7.id = `${reservations[i].id}`;
+          // Col7.textContent = reservations[i].person;
           //Col7.id= `${reservations[i].adventure}`;
-          const button =document.createElement("button");
+          const alink=document.createElement("a");
+          // alink.className="reservation-visit-button";
+          // alink.id=`${reservations[i].id}`;
+          // alink.href="../detail/?adventure="+`${reservations[i].adventure}`;
+          alink.href=`../detail/?adventure=${reservations[i].adventure}`
+          const button = document.createElement("button");
           button.className="reservation-visit-button";
-          button.id=`${reservations[i].id}`;
-          button.innerHTML=`<a href="../detail/?adventure=${reservations[i].adventure}">Visit Adventure</a>`;
-          Col7.append(button);
+          button.textContent="Visit Adventure";
+          alink.append(button);
+          Col7.append(alink);
           row.append(Col7);
 
           tablebody.appendChild(row);
