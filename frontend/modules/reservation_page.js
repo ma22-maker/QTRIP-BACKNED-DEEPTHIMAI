@@ -4,10 +4,18 @@ import config from "../conf/index.js";
 async function fetchReservations() {
   // TODO: MODULE_RESERVATIONS
   // 1. Fetch Reservations by invoking the REST API and return them
-
-
+  try{
+    const result = await fetch(`${config.backendEndpoint}/reservations/`);
+    const data = await result.json(); 
+    console.log(data);
+    return(data);
+      }
+    catch(err)
+    {
+     return null;
+     }
   // Place holder for functionality to work in the Stubs
-  return null;
+ 
 }
 
 //Function to add reservations to the table. Also; in case of no reservations, display the no-reservation-banner, else hide it.
@@ -25,7 +33,89 @@ function addReservationToTable(reservations) {
     1. The date of adventure booking should appear in the format D/MM/YYYY (en-IN format) Example:  4/11/2020 denotes 4th November, 2020
     2. The booking time should appear in a format like 4 November 2020, 9:32:31 pm
   */
+      const noreserv = document.getElementById("no-reservation-banner");
+      const table = document.getElementById("reservation-table-parent");
+      
+      if (reservations.length === 0) {
+        noreserv.style.display = "block";
+        table.style.display = "none";
+      } else {
+        noreserv.style.display = "none";
+        table.style.display = "block";
+        
+        // Clear existing rows from the table
 
+        const tablebody = document.getElementById("reservation-table");
+        // Add new rows for each reservation
+        for(let i=0;i<reservations.length;i++){
+
+          const row = document.createElement("tr");
+          // row.id=reservations[i].id;
+          // Add columns for reservation ID, adventure name, date of booking, booking time, etc.
+          const idCol = document.createElement("td");
+          idCol.innerText = reservations[i].id;
+          row.append(idCol);
+          
+          const advCol = document.createElement("td");
+          advCol.innerText = reservations[i].name ;
+          row.append(advCol);
+         
+          const Col2 = document.createElement("td");
+          Col2.innerText = reservations[i].adventureName;
+          row.append(Col2);
+
+          const Col3 = document.createElement("td");
+          Col3.innerText = reservations[i].person;
+          row.append(Col3);
+
+          const Col4 = document.createElement("td");
+          const inputDateStr = reservations[i].date;
+          const inputDate = new Date(inputDateStr);
+          const day = inputDate.getDate().toString().padStart(2, '0');
+          const month = (inputDate.getMonth() + 1).toString().padStart(2, '0');
+          const year = inputDate.getFullYear().toString();
+          const outputDateStr = `${day}/${month}/${year}`;
+          Col4.innerText =outputDateStr;
+          row.append(Col4);
+
+          const Col5 = document.createElement("td");
+          Col5.innerText = reservations[i].price;
+          row.append(Col5);
+
+          const Col6 = document.createElement("td");
+          const Str = reservations[i].time;
+          const input = new Date(Str);
+          const options = {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            second: "numeric",
+            hour12: true,
+            //timeZoneName: "short",
+            //hourCycle: 'h12' // To use 12-hour format
+          };
+          const out = input.toLocaleDateString("en-IN", options).replace("at", ",");
+          console.log(out);
+          Col6.innerText = out;
+          row.append(Col6);
+
+          
+          const Col7 = document.createElement("td");
+          // Col7.innerText = reservations[i].person;
+          //Col7.id= `${reservations[i].adventure}`;
+          const button =document.createElement("button");
+          button.className="reservation-visit-button";
+          button.id=`${reservations[i].id}`;
+          button.innerHTML=`<a href="../detail/?adventure=${reservations[i].adventure}">Visit Adventure</a>`;
+          Col7.append(button);
+          row.append(Col7);
+
+          tablebody.appendChild(row);
+        };
+        
+      }
 }
 
 export { fetchReservations, addReservationToTable };

@@ -54,8 +54,6 @@ describe("Landing Page Tests", function () {
     //add checks for tile and parent div has an id of data
   });
 
-<<<<<<< HEAD
-=======
   it("Correctly links City Card to Adventures page", function () {
     const expected = "adventures/?city=london";
     addCityToDOM("london", "London", "London", "London");
@@ -63,5 +61,4 @@ describe("Landing Page Tests", function () {
       expect.stringContaining(expected)
     );
   });
->>>>>>> fd7af8b4a3181ef2a4513d2bcd7834cac44efcea
 });
